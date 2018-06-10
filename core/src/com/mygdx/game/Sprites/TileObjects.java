@@ -1,5 +1,6 @@
 package com.mygdx.game.Sprites;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Screens.PlayScreen;
 
 public abstract class TileObjects {
     protected World world;
@@ -19,14 +21,14 @@ public abstract class TileObjects {
     protected TiledMapTile tile;
     protected Rectangle bounds;
     protected Body body;
-
+    protected PlayScreen screen;
     protected Fixture fixture;
 
     public TileObjects(World world, TiledMap map, Rectangle bounds){
         this.world = world;
         this.map = map;
         this.bounds = bounds;
-
+        
         BodyDef bDef = new BodyDef();
         FixtureDef fDef = new FixtureDef();
         PolygonShape shape = new PolygonShape();

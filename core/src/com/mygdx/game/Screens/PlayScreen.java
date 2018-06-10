@@ -23,6 +23,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Sprites.Enemies;
+import com.mygdx.game.Sprites.ItemDef;
+import com.mygdx.game.Sprites.Items;
+import com.mygdx.game.Sprites.Mushroom;
 import com.mygdx.game.Tools.WorldContact;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.UI;
@@ -31,6 +34,8 @@ import com.mygdx.game.Sprites.Coin;
 import com.mygdx.game.Sprites.Goomba;
 import com.mygdx.game.Sprites.Mario;
 
+import java.util.concurrent.LinkedBlockingQueue;
+
 
 public class PlayScreen implements Screen {
 
@@ -38,6 +43,7 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
+    private PlayScreen screen;
     private MarioBros game;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
@@ -50,7 +56,10 @@ public class PlayScreen implements Screen {
 
     private Mario player;
     //temporary
-    Array<Goomba> goombas;
+    private Array<Goomba> goombas;
+
+    private Array<Items>items;
+    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
     private TextureAtlas atlas;
 
@@ -74,6 +83,7 @@ public class PlayScreen implements Screen {
 
     public void update(float dt){
         handleInput(dt);
+        handleSpawningItems();
 
         world.step(1/60f,6,2);
 
@@ -83,6 +93,10 @@ public class PlayScreen implements Screen {
             if(enemy.getX() < player.getX() + 224/MarioBros.ppm){
                 enemy.b2body.setActive(true);
             }
+        }
+
+        for(Items item:items){
+            item.draw(game.batch);
         }
 
         ui.update(dt);
@@ -174,6 +188,23 @@ public class PlayScreen implements Screen {
         for(MapObject object: map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             goombas.add(new Goomba(this,rect.getX()/MarioBros.ppm,rect.getY()/MarioBros.ppm));
+        }
+
+        items = new Array<Items>();
+        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+
+    }
+
+    public void spawnItem(ItemDef itemDef){
+        itemsToSpawn.add(itemDef);
+    }
+
+    public void handleSpawningItems(){
+        if(!itemsToSpawn.isEmpty()){
+            ItemDef itemDef = itemsToSpawn.poll();
+            if(itemDef.type == Mushroom.class){
+                items.add(new Mushroom(this,itemDef.position.x,itemDef.position.y));
+            }
         }
     }
 
