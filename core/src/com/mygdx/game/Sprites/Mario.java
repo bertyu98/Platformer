@@ -125,7 +125,7 @@ public class Mario extends Sprite {
 
         fDef.filter.categoryBits = MarioBros.MARIO_BIT;
         fDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT
-        |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT;
+        |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT;
 
         fDef.shape = shape;
         b2body.createFixture(fDef);

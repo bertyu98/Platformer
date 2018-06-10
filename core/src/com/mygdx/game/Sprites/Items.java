@@ -28,7 +28,7 @@ public abstract class Items extends Sprite {
 
     public abstract void defineItem();
 
-    public abstract void use();
+    public abstract void use(Mario mario);
 
     public void draw(Batch batch){
         if(!destroy){
@@ -46,5 +46,14 @@ public abstract class Items extends Sprite {
 
     public void destroy(){
         toDestroy = true;
+    }
+
+    public void reverseVelocity(boolean x,boolean y){
+        if(x){
+            velocity.x = -velocity.x;
+        }
+        if(y){
+            velocity.y = -velocity.y;
+        }
     }
 }

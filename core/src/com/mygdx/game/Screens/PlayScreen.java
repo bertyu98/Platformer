@@ -26,6 +26,7 @@ import com.mygdx.game.Sprites.Enemies;
 import com.mygdx.game.Sprites.ItemDef;
 import com.mygdx.game.Sprites.Items;
 import com.mygdx.game.Sprites.Mushroom;
+import com.mygdx.game.Sprites.TileObjects;
 import com.mygdx.game.Tools.WorldContact;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.UI;
@@ -42,8 +43,6 @@ public class PlayScreen implements Screen {
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-
-    private PlayScreen screen;
     private MarioBros game;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
@@ -96,9 +95,8 @@ public class PlayScreen implements Screen {
         }
 
         for(Items item:items){
-            item.draw(game.batch);
+            item.update(dt);
         }
-
         ui.update(dt);
 
         gameCam.position.x = player.b2body.getPosition().x;
@@ -155,7 +153,7 @@ public class PlayScreen implements Screen {
         //coins
         for(MapObject object: map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Coin(world,map,rect);
+            new Coin(world,map,rect,this,object);
 
         }
 
@@ -163,7 +161,7 @@ public class PlayScreen implements Screen {
         for(MapObject object: map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new Brick(world,map,rect);
+            new Brick(world,map,rect,this,object);
 
         }
 
@@ -195,6 +193,7 @@ public class PlayScreen implements Screen {
 
     }
 
+
     public void spawnItem(ItemDef itemDef){
         itemsToSpawn.add(itemDef);
     }
@@ -207,6 +206,8 @@ public class PlayScreen implements Screen {
             }
         }
     }
+
+
 
     public Array<Goomba>getGoombas(){
         return goombas;
@@ -235,6 +236,9 @@ public class PlayScreen implements Screen {
         player.draw(game.batch);
         for(Enemies enemy:getGoombas()){
             enemy.draw(game.batch);
+        }
+        for(Items item:items){
+            item.draw(game.batch);
         }
         game.batch.end();
 

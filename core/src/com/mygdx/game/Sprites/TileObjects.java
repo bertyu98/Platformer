@@ -1,6 +1,8 @@
 package com.mygdx.game.Sprites;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -23,12 +25,16 @@ public abstract class TileObjects {
     protected Body body;
     protected PlayScreen screen;
     protected Fixture fixture;
+    protected MapObject object;
 
-    public TileObjects(World world, TiledMap map, Rectangle bounds){
+
+
+    public TileObjects(World world, TiledMap map, Rectangle bounds, PlayScreen screen, MapObject object){
         this.world = world;
+        this.object = object;
         this.map = map;
         this.bounds = bounds;
-        
+        this.screen = screen;
         BodyDef bDef = new BodyDef();
         FixtureDef fDef = new FixtureDef();
         PolygonShape shape = new PolygonShape();

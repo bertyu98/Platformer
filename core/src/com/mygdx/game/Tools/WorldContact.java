@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Sprites.Enemies;
+import com.mygdx.game.Sprites.Items;
+import com.mygdx.game.Sprites.Mario;
 import com.mygdx.game.Sprites.TileObjects;
 
 public class WorldContact implements ContactListener {
@@ -27,7 +29,7 @@ public class WorldContact implements ContactListener {
             }
         }
 
-        if(cDef == (MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT)){
+        else if(cDef == (MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT)){
             if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT){
                 ((Enemies)fixA.getUserData()).hitonHead();
             }
@@ -35,7 +37,7 @@ public class WorldContact implements ContactListener {
                 ((Enemies)fixB.getUserData()).hitonHead();
             }
         }
-        if(cDef == (MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT)){
+        else if(cDef == (MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT)){
             if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT){
                 ((Enemies)fixA.getUserData()).reverseVelocity(true,false);
             }
@@ -43,12 +45,28 @@ public class WorldContact implements ContactListener {
                 ((Enemies)fixB.getUserData()).reverseVelocity(true,false);
             }
         }
-        if(cDef == (MarioBros.MARIO_BIT| MarioBros.ENEMY_BIT)){
+        else if(cDef == (MarioBros.MARIO_BIT| MarioBros.ENEMY_BIT)){
             Gdx.app.log("Mario","Died");
         }
-        if(cDef ==(MarioBros.ENEMY_BIT|MarioBros.ENEMY_BIT)){
+        else if(cDef ==(MarioBros.ENEMY_BIT|MarioBros.ENEMY_BIT)){
             ((Enemies)fixA.getUserData()).reverseVelocity(true,false);
             ((Enemies)fixB.getUserData()).reverseVelocity(true,false);
+        }
+        else if(cDef == (MarioBros.ITEM_BIT | MarioBros.OBJECT_BIT)){
+            if(fixA.getFilterData().categoryBits == MarioBros.ITEM_BIT){
+                ((Items)fixA.getUserData()).reverseVelocity(true,false);
+            }
+            else {
+                ((Items)fixB.getUserData()).reverseVelocity(true,false);
+            }
+        }
+        else if(cDef == (MarioBros.ITEM_BIT | MarioBros.MARIO_BIT)){
+            if(fixA.getFilterData().categoryBits == MarioBros.ITEM_BIT){
+                ((Items)fixA.getUserData()).use((Mario)fixB.getUserData());
+            }
+            else {
+                ((Items)fixB.getUserData()).use((Mario)fixA.getUserData());
+            }
         }
 
     }

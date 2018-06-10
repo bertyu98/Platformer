@@ -21,6 +21,7 @@ public class Goomba extends Enemies {
     private boolean destroy;
 
 
+
     public Goomba(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         frames = new Array<TextureRegion>();
