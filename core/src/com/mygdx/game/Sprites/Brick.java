@@ -8,7 +8,7 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.UI;
 
 
-public class Brick extends Items {
+public class Brick extends TileObjects {
     public Brick(World world, TiledMap map, Rectangle bounds){
         super(world,map,bounds);
         fixture.setUserData(this);

@@ -8,8 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Sprites.Enemies;
-import com.mygdx.game.Sprites.Items;
-import com.mygdx.game.Sprites.Mario;
+import com.mygdx.game.Sprites.TileObjects;
 
 public class WorldContact implements ContactListener {
 
@@ -23,8 +22,8 @@ public class WorldContact implements ContactListener {
             Fixture head = fixA.getUserData() == "head" ? fixA : fixB;
             Fixture object = head == fixA ? fixB : fixA;
 
-            if(object.getUserData() instanceof Items){
-                ((Items) object.getUserData()).onHeadHit();
+            if(object.getUserData() instanceof TileObjects){
+                ((TileObjects) object.getUserData()).onHeadHit();
             }
         }
 
