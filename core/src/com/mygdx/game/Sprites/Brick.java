@@ -19,10 +19,12 @@ public class Brick extends TileObjects {
     }
 
     @Override
-    public void onHeadHit() {
-        Gdx.app.log("Brick","Hit");
-        setCategoryFilter(MarioBros.DESTROYED_BIT);
-        getCell().setTile(null);
-        UI.addScore(200);
+    public void onHeadHit(Mario mario) {
+        if(mario.isBig()) {
+            Gdx.app.log("Brick", "Hit");
+            setCategoryFilter(MarioBros.DESTROYED_BIT);
+            getCell().setTile(null);
+            UI.addScore(200);
+        }
     }
 }

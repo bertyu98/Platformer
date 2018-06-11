@@ -18,14 +18,25 @@ public class WorldContact implements ContactListener {
     public void beginContact(Contact contact) {
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
-
-        int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
-        if(fixA.getUserData() == "head" || fixB.getUserData() == "head"){
+        /*if(fixA.getUserData() == "head" || fixB.getUserData() == "head"){
             Fixture head = fixA.getUserData() == "head" ? fixA : fixB;
             Fixture object = head == fixA ? fixB : fixA;
 
             if(object.getUserData() instanceof TileObjects){
-                ((TileObjects) object.getUserData()).onHeadHit();
+                ((TileObjects) object.getUserData()).onHeadHit((Mario)fixA.getUserData());
+            }
+        }*/
+
+        int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
+
+
+
+        if(cDef == (MarioBros.MARIO_HEAD_BIT|MarioBros.COIN_BIT) || cDef == (MarioBros.MARIO_HEAD_BIT | MarioBros.BRICK_BIT)){
+            if(fixA.getFilterData().categoryBits == MarioBros.MARIO_HEAD_BIT){
+                ((TileObjects) fixB.getUserData()).onHeadHit((Mario)fixA.getUserData());
+            }
+            else{
+                ((TileObjects) fixA.getUserData()).onHeadHit((Mario)fixB.getUserData());
             }
         }
 

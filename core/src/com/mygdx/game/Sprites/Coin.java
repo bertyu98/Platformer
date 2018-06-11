@@ -24,7 +24,7 @@ public class Coin extends TileObjects {
     }
 
     @Override
-    public void onHeadHit() {
+    public void onHeadHit(Mario mario) {
         if(getCell().getTile().getId() == BLANK_COIN){
 
         }
