@@ -27,6 +27,7 @@ import com.mygdx.game.Sprites.ItemDef;
 import com.mygdx.game.Sprites.Items;
 import com.mygdx.game.Sprites.Mushroom;
 import com.mygdx.game.Sprites.TileObjects;
+import com.mygdx.game.Sprites.Turtle;
 import com.mygdx.game.Tools.WorldContact;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.UI;
@@ -56,6 +57,8 @@ public class PlayScreen implements Screen {
     private Mario player;
     //temporary
     private Array<Goomba> goombas;
+    private Array<Turtle> turtles;
+
 
     private Array<Items>items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
@@ -67,16 +70,18 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-            player.b2body.applyLinearImpulse(new Vector2(0,4f),player.b2body.getWorldCenter(),true);
-        }
+        if(player.currentState != Mario.State.DEAD) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+            }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2){
-            player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
-        }
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) {
+                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+            }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2){
-            player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) {
+                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+            }
         }
     }
 
@@ -87,9 +92,9 @@ public class PlayScreen implements Screen {
         world.step(1/60f,6,2);
 
         player.update(dt);
-        for(Enemies enemy:getGoombas()){
+        for(Enemies enemy:getEnemies()){
             enemy.update(dt);
-            if(enemy.getX() < player.getX() + 224/MarioBros.ppm){
+            if(enemy.getX() > player.getX() - 224/MarioBros.ppm){
                 enemy.b2body.setActive(true);
             }
         }
@@ -99,11 +104,22 @@ public class PlayScreen implements Screen {
         }
         ui.update(dt);
 
-        gameCam.position.x = player.b2body.getPosition().x;
-
+        if(player.currentState != Mario.State.DEAD) {
+            gameCam.position.x = player.b2body.getPosition().x;
+        }
         gameCam.update();
         renderer.setView(gameCam);
 
+    }
+
+    public boolean gameOver(){
+        if(player.currentState == Mario.State.DEAD && player.getStateTimer() > 3){
+            return true;
+        }
+        if(player.currentState == Mario.State.FALLING && player.b2body.getLinearVelocity().y < -5){
+            return true;
+        }
+        return false;
     }
 
     public PlayScreen(MarioBros game){
@@ -188,10 +204,25 @@ public class PlayScreen implements Screen {
             goombas.add(new Goomba(this,rect.getX()/MarioBros.ppm,rect.getY()/MarioBros.ppm));
         }
 
+        //create turtles
+        turtles = new Array<Turtle>();
+        for(MapObject object: map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            turtles.add(new Turtle(this,rect.getX()/MarioBros.ppm,rect.getY()/MarioBros.ppm));
+        }
+
         items = new Array<Items>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
 
     }
+
+    public Array<Enemies> getEnemies(){
+        Array<Enemies> enemies = new Array<Enemies>();
+        enemies.addAll(goombas);
+        enemies.addAll(turtles);
+        return enemies;
+    }
+
 
 
     public void spawnItem(ItemDef itemDef){
@@ -234,13 +265,19 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         player.draw(game.batch);
-        for(Enemies enemy:getGoombas()){
+        for(Enemies enemy:getEnemies()){
             enemy.draw(game.batch);
         }
+
         for(Items item:items){
             item.draw(game.batch);
         }
         game.batch.end();
+
+        if(gameOver()){
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
 
 
     }
