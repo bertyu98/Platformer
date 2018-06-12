@@ -42,10 +42,10 @@ public class WorldContact implements ContactListener {
 
         else if(cDef == (MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT)){
             if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT){
-                ((Enemies)fixA.getUserData()).hitonHead();
+                ((Enemies)fixA.getUserData()).hitonHead((Mario)fixB.getUserData());
             }
             else if (fixB.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT){
-                ((Enemies)fixB.getUserData()).hitonHead();
+                ((Enemies)fixB.getUserData()).hitonHead((Mario)fixA.getUserData());
             }
         }
         else if(cDef == (MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT)){
@@ -59,15 +59,15 @@ public class WorldContact implements ContactListener {
         else if(cDef == (MarioBros.MARIO_BIT| MarioBros.ENEMY_BIT)){
             Gdx.app.log("Mario","Died");
             if(fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT){
-                ((Mario)fixA.getUserData()).hit();
+                ((Mario)fixA.getUserData()).hit((Enemies)fixB.getUserData());
             }
             else{
-                ((Mario)fixB.getUserData()).hit();
+                ((Mario)fixB.getUserData()).hit((Enemies)fixA.getUserData());
             }
         }
         else if(cDef ==(MarioBros.ENEMY_BIT|MarioBros.ENEMY_BIT)){
-            ((Enemies)fixA.getUserData()).reverseVelocity(true,false);
-            ((Enemies)fixB.getUserData()).reverseVelocity(true,false);
+            ((Enemies)fixA.getUserData()).onEnemyHit((Enemies)fixB.getUserData());
+            ((Enemies)fixB.getUserData()).onEnemyHit((Enemies)fixA.getUserData());
         }
         else if(cDef == (MarioBros.ITEM_BIT | MarioBros.OBJECT_BIT)){
             if(fixA.getFilterData().categoryBits == MarioBros.ITEM_BIT){

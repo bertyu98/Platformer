@@ -22,11 +22,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Sprites.BuzzyBeetle;
 import com.mygdx.game.Sprites.Enemies;
+import com.mygdx.game.Sprites.Flower;
 import com.mygdx.game.Sprites.ItemDef;
 import com.mygdx.game.Sprites.Items;
 import com.mygdx.game.Sprites.Mushroom;
-import com.mygdx.game.Sprites.TileObjects;
 import com.mygdx.game.Sprites.Turtle;
 import com.mygdx.game.Tools.WorldContact;
 import com.mygdx.game.MarioBros;
@@ -58,6 +59,7 @@ public class PlayScreen implements Screen {
     //temporary
     private Array<Goomba> goombas;
     private Array<Turtle> turtles;
+    private Array<BuzzyBeetle> buzzyBeetles;
 
 
     private Array<Items>items;
@@ -211,6 +213,12 @@ public class PlayScreen implements Screen {
             turtles.add(new Turtle(this,rect.getX()/MarioBros.ppm,rect.getY()/MarioBros.ppm));
         }
 
+        buzzyBeetles = new Array<BuzzyBeetle>();
+        for(MapObject object: map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            buzzyBeetles.add(new BuzzyBeetle(this,rect.getX()/MarioBros.ppm,rect.getY()/MarioBros.ppm));
+        }
+
         items = new Array<Items>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
 
@@ -220,6 +228,7 @@ public class PlayScreen implements Screen {
         Array<Enemies> enemies = new Array<Enemies>();
         enemies.addAll(goombas);
         enemies.addAll(turtles);
+        enemies.addAll(buzzyBeetles);
         return enemies;
     }
 
@@ -234,6 +243,9 @@ public class PlayScreen implements Screen {
             ItemDef itemDef = itemsToSpawn.poll();
             if(itemDef.type == Mushroom.class){
                 items.add(new Mushroom(this,itemDef.position.x,itemDef.position.y));
+            }
+            else{
+                items.add(new Flower(this,itemDef.position.x,itemDef.position.y));
             }
         }
     }

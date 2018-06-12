@@ -1,5 +1,6 @@
 package com.mygdx.game.Sprites;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -42,6 +43,11 @@ public class Mario extends Sprite {
     private TextureRegion bigMarioJump;
     private Animation<TextureRegion> bigMarioRun;
     private Animation<TextureRegion> growMario;
+
+    private TextureRegion fireMarioStand;
+    private TextureRegion fireMarioJump;
+    private Animation<TextureRegion> fireMarioRun;
+    private Animation<TextureRegion> fireMarioTransform;
 
     public Mario(World world, PlayScreen screen){
 
@@ -279,21 +285,25 @@ public class Mario extends Sprite {
         }
     }
 
-    public void hit(){
-        if(marioIsBig){
-            marioIsBig = false;
-            timeToRedefineMario = true;
-            setBounds(getX(),getY(),getWidth(),getHeight()/2);
-
+    public void hit(Enemies enemies){
+        if(enemies instanceof Turtle && ((Turtle) enemies).currentState == Turtle.State.STANDING_SHELL){
+            ((Turtle) enemies).kick(enemies.b2body.getPosition().x > b2body.getPosition().x ? Turtle.KICK_RIGHT_SPEED:Turtle.KICK_LEFT_SPEED);
         }
-        else{
-            marioIsDead = true;
-            Filter filter = new Filter();
-            filter.maskBits = MarioBros.NOTHING_BIT;
-            for(Fixture fixture: b2body.getFixtureList()){
-                fixture.setFilterData(filter);
+        else {
+            if (marioIsBig) {
+                marioIsBig = false;
+                timeToRedefineMario = true;
+                setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+
+            } else {
+                marioIsDead = true;
+                Filter filter = new Filter();
+                filter.maskBits = MarioBros.NOTHING_BIT;
+                for (Fixture fixture : b2body.getFixtureList()) {
+                    fixture.setFilterData(filter);
+                }
+                b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
             }
-            b2body.applyLinearImpulse(new Vector2(0,4f),b2body.getWorldCenter(),true);
         }
     }
 

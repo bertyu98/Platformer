@@ -8,12 +8,11 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.UI;
 import com.mygdx.game.Screens.PlayScreen;
 
-public class Mushroom extends Items {
-
-    public Mushroom(PlayScreen screen, float x, float y) {
+public class Flower extends Items {
+    public Flower(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        setRegion(screen.getAtlas().findRegion("mushroom"),0,0,16,16);
-        velocity = new Vector2(0.7f,0);
+        setRegion(screen.getAtlas().findRegion("flower"),0,0,16,16);
+        velocity = new Vector2(0,0);
     }
 
     @Override
@@ -33,13 +32,6 @@ public class Mushroom extends Items {
                 |MarioBros.COIN_BIT|MarioBros.BRICK_BIT;
         fDef.shape = shape;
         body.createFixture(fDef).setUserData(this);
-    }
-
-    @Override
-    public void use(Mario mario) {
-        destroy();
-        mario.grow();
-        UI.addScore(1000);
 
     }
 
@@ -49,5 +41,13 @@ public class Mushroom extends Items {
         setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y - getHeight()/2);
         velocity.y = body.getLinearVelocity().y;
         body.setLinearVelocity(velocity);
+
+    }
+
+    @Override
+    public void use(Mario mario) {
+        destroy();
+        UI.addScore(1000);
+
     }
 }

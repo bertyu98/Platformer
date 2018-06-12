@@ -20,10 +20,10 @@ public abstract class Enemies extends Sprite {
         velocity = new Vector2(-1,-2);
         b2body.setActive(false);
     }
-
+    public abstract void onEnemyHit(Enemies enemies);
     protected abstract void defineEnemy();
 
-    public abstract void hitonHead();
+    public abstract void hitonHead(Mario mario);
 
     public void reverseVelocity(boolean x,boolean y){
         if(x){

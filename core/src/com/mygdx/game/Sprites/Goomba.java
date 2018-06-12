@@ -87,13 +87,25 @@ public class Goomba extends Enemies {
     }
 
     @Override
-    public void hitonHead() {
+    public void hitonHead(Mario mario) {
         setToDestroy = true;
     }
 
     public void draw(Batch batch){
         if(!destroy || stateTime < 1){
             super.draw(batch);
+        }
+    }
+
+    public void onEnemyHit(Enemies enemies){
+        if(enemies instanceof Turtle && ((Turtle) enemies).currentState == Turtle.State.MOVING_SHELL){
+            setToDestroy = true;
+        }
+        else if(enemies instanceof BuzzyBeetle && ((BuzzyBeetle) enemies).currentState == BuzzyBeetle.State.MOVING_SHELL){
+            setToDestroy = true;
+        }
+        else{
+            reverseVelocity(true,false);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,12 +13,12 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
 
-public class Turtle extends Enemies{
+public class BuzzyBeetle extends Enemies {
     public enum State {WALKING,STANDING_SHELL,MOVING_SHELL,DEAD}
     public static final int KICK_LEFT_SPEED = -2;
     public static final int KICK_RIGHT_SPEED = 2;
-    public State currentState;
-    public State previousState;
+    public BuzzyBeetle.State currentState;
+    public BuzzyBeetle.State previousState;
     private float stateTime;
     private Animation<TextureRegion> walkAnimation;
     private Array<TextureRegion> frames;
@@ -28,18 +27,18 @@ public class Turtle extends Enemies{
     private TextureRegion shell;
     private float deadRotationDegrees;
 
-    public Turtle(PlayScreen screen, float x, float y) {
+    public BuzzyBeetle(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         frames = new Array<TextureRegion>();
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),0,0,16,24));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),16,0,16,24));
-        shell = new TextureRegion(screen.getAtlas().findRegion("turtle"),64,0,16,24);
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("buzzy"),0,0,16,16));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("buzzy"),16,0,16,16));
+        shell = new TextureRegion(screen.getAtlas().findRegion("buzzy"),32,0,16,16);
         walkAnimation = new Animation<TextureRegion>(0.2f,frames);
-        currentState = previousState = State.WALKING;
+        currentState = previousState = BuzzyBeetle.State.WALKING;
         deadRotationDegrees = 0;
-        setBounds(getX(),getY(),16/ MarioBros.ppm,24/MarioBros.ppm);
-
+        setBounds(getX(),getY(),16/ MarioBros.ppm,16/MarioBros.ppm);
     }
+
 
     @Override
     protected void defineEnemy() {
@@ -78,8 +77,8 @@ public class Turtle extends Enemies{
 
     @Override
     public void hitonHead(Mario mario) {
-        if(currentState != State.STANDING_SHELL){
-            currentState = State.STANDING_SHELL;
+        if(currentState != BuzzyBeetle.State.STANDING_SHELL){
+            currentState = BuzzyBeetle.State.STANDING_SHELL;
             velocity.x = 0;
         }
         else{
@@ -89,23 +88,18 @@ public class Turtle extends Enemies{
 
     public void kick(int speed){
         velocity.x = speed;
-        currentState = State.MOVING_SHELL;
+        currentState = BuzzyBeetle.State.MOVING_SHELL;
     }
-
-    public State getCurrentState(){
-        return currentState;
-    }
-
 
     @Override
     public void update(float dt) {
         setRegion(getFrames(dt));
-        if (currentState == State.STANDING_SHELL && stateTime > 5){
-            currentState = State.WALKING;
+        if (currentState == BuzzyBeetle.State.STANDING_SHELL && stateTime > 5){
+            currentState = BuzzyBeetle.State.WALKING;
             velocity.x = -1;
         }
         setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - 8/MarioBros.ppm);
-        if(currentState == State.DEAD){
+        if(currentState == BuzzyBeetle.State.DEAD){
             deadRotationDegrees +=3;
             rotate(deadRotationDegrees);
             if(stateTime > 5 && !destroy){
@@ -142,38 +136,38 @@ public class Turtle extends Enemies{
         previousState = currentState;
         return region;
     }
-
     public void onEnemyHit(Enemies enemy){
-        if(enemy instanceof  Turtle){
-            if(((Turtle) enemy).currentState == State.MOVING_SHELL && currentState != State.MOVING_SHELL){
+        if(enemy instanceof  BuzzyBeetle){
+            if(((BuzzyBeetle) enemy).currentState == BuzzyBeetle.State.MOVING_SHELL && currentState != BuzzyBeetle.State.MOVING_SHELL){
                 killed();
             }
-            else if(currentState == State.MOVING_SHELL && ((Turtle) enemy).currentState == State.WALKING){
+            else if(currentState == BuzzyBeetle.State.MOVING_SHELL && ((BuzzyBeetle) enemy).currentState == BuzzyBeetle.State.WALKING){
                 return;
             }
             else{
                 reverseVelocity(true,false);
             }
         }
-        else if(enemy instanceof  BuzzyBeetle){
-            if(((BuzzyBeetle) enemy).currentState == BuzzyBeetle.State.MOVING_SHELL && currentState != State.MOVING_SHELL){
-                killed();
-            }
-            else if(currentState == State.MOVING_SHELL && ((BuzzyBeetle) enemy).currentState == BuzzyBeetle.State.WALKING){
-                return;
-            }
-            else{
-                reverseVelocity(true,false);
-            }
 
+        else if(enemy instanceof  Turtle){
+            if(((Turtle) enemy).currentState == Turtle.State.MOVING_SHELL && currentState != State.MOVING_SHELL){
+                killed();
+            }
+            else if(currentState == State.MOVING_SHELL && ((Turtle) enemy).currentState == Turtle.State.WALKING){
+                return;
+            }
+            else{
+                reverseVelocity(true,false);
+            }
         }
-        else if(currentState != State.MOVING_SHELL){
+
+        else if(currentState != BuzzyBeetle.State.MOVING_SHELL){
             reverseVelocity(true,false);
         }
     }
 
     public void killed(){
-        currentState = State.DEAD;
+        currentState = BuzzyBeetle.State.DEAD;
         Filter filter = new Filter();
         filter.maskBits = MarioBros.NOTHING_BIT;
         for(Fixture fixture:b2body.getFixtureList()){
@@ -181,11 +175,5 @@ public class Turtle extends Enemies{
         }
         b2body.applyLinearImpulse(new Vector2(0,5f),b2body.getWorldCenter(),true);
 
-    }
-
-    public void draw(Batch batch){
-        if(!destroy){
-            super.draw(batch);
-        }
     }
 }
