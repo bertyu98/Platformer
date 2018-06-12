@@ -31,9 +31,9 @@ public class Turtle extends Enemies{
     public Turtle(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         frames = new Array<TextureRegion>();
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),0,0,16,24));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),16,0,16,24));
-        shell = new TextureRegion(screen.getAtlas().findRegion("turtle"),64,0,16,24);
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("Koopa"),0,0,16,32));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("Koopa"),16,0,16,32));
+        shell = new TextureRegion(screen.getAtlas().findRegion("Koopa"),64,0,16,32);
         walkAnimation = new Animation<TextureRegion>(0.2f,frames);
         currentState = previousState = State.WALKING;
         deadRotationDegrees = 0;
@@ -102,7 +102,7 @@ public class Turtle extends Enemies{
         setRegion(getFrames(dt));
         if (currentState == State.STANDING_SHELL && stateTime > 5){
             currentState = State.WALKING;
-            velocity.x = -1;
+            velocity.x = 1;
         }
         setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - 8/MarioBros.ppm);
         if(currentState == State.DEAD){

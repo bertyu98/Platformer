@@ -1,17 +1,24 @@
 package com.mygdx.game.Sprites;
 
+
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.UI;
 import com.mygdx.game.Screens.PlayScreen;
 
-public class Flower extends Items {
-    public Flower(PlayScreen screen, float x, float y) {
+
+public class CoinObject extends Items {
+
+
+    public CoinObject(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        setRegion(screen.getAtlas().findRegion("Flower"),0,0,16,16);
+        setRegion(screen.getAtlas().findRegion("Coin"),0,0,16,16);
         velocity = new Vector2(0,0);
     }
 
@@ -47,8 +54,6 @@ public class Flower extends Items {
     @Override
     public void use(Mario mario) {
         destroy();
-        mario.fireTransform();
-        UI.addScore(1000);
-
+        UI.addScore(200);
     }
 }

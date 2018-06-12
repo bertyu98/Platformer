@@ -47,8 +47,10 @@ public class Coin extends TileObjects {
             else{
                 Gdx.app.log("Coin", "Hit");
                 getCell().setTile(tileSet.getTile(BLANK_COIN));
+
+                screen.spawnItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / MarioBros.ppm)
+                        , CoinObject.class));
                 getCell().setTile(tileSet.getTile(BLANK_COIN));
-                UI.addScore(200);
             }
 
 

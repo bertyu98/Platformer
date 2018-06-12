@@ -17,7 +17,7 @@ public abstract class Enemies extends Sprite {
         this.screen = screen;
         setPosition(x,y);
         defineEnemy();
-        velocity = new Vector2(-1,-2);
+        velocity = new Vector2(1,-2);
         b2body.setActive(false);
     }
     public abstract void onEnemyHit(Enemies enemies);

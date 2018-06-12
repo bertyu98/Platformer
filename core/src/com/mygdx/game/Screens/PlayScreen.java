@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Sprites.BuzzyBeetle;
+import com.mygdx.game.Sprites.CoinObject;
 import com.mygdx.game.Sprites.Enemies;
 import com.mygdx.game.Sprites.Flower;
 import com.mygdx.game.Sprites.ItemDef;
@@ -51,7 +52,7 @@ public class PlayScreen implements Screen {
 
     private UI ui;
 
-    private World world;
+    public World world;
     private Box2DDebugRenderer b2dr;
 
 
@@ -244,6 +245,9 @@ public class PlayScreen implements Screen {
             if(itemDef.type == Mushroom.class){
                 items.add(new Mushroom(this,itemDef.position.x,itemDef.position.y));
             }
+            else if(itemDef.type == CoinObject.class){
+                items.add(new CoinObject(this,itemDef.position.x,itemDef.position.y));
+            }
             else{
                 items.add(new Flower(this,itemDef.position.x,itemDef.position.y));
             }
@@ -331,4 +335,5 @@ public class PlayScreen implements Screen {
         b2dr.dispose();
         ui.dispose();
     }
+
 }

@@ -30,9 +30,9 @@ public class BuzzyBeetle extends Enemies {
     public BuzzyBeetle(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         frames = new Array<TextureRegion>();
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("buzzy"),0,0,16,16));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("buzzy"),16,0,16,16));
-        shell = new TextureRegion(screen.getAtlas().findRegion("buzzy"),32,0,16,16);
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("Star"),0,0,16,16));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("Star"),16,0,16,16));
+        shell = new TextureRegion(screen.getAtlas().findRegion("Star"),32,0,16,16);
         walkAnimation = new Animation<TextureRegion>(0.2f,frames);
         currentState = previousState = BuzzyBeetle.State.WALKING;
         deadRotationDegrees = 0;
