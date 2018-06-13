@@ -1,7 +1,7 @@
 package com.mygdx.game.Sprites;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Weapon.Fireball;
 
 public class Mario extends Sprite {
     public enum State{FALLING,JUMPING,STANDING,RUNNING,GROWING,TRANSFORM,DEAD}
@@ -30,12 +31,13 @@ public class Mario extends Sprite {
     private Animation <TextureRegion> marioRun;
     private TextureRegion marioJump;
 
-    private boolean runningRight;
+    public boolean runningRight;
     private float stateTimer;
 
     private boolean marioIsBig;
     private boolean runGrowAnimation;
     private boolean timeToDefineBigMario;
+    private boolean timeToDefineFireMario;
     private boolean timeToRedefineMario;
     private boolean marioIsDead;
 
@@ -52,8 +54,14 @@ public class Mario extends Sprite {
     private Animation<TextureRegion> fireMarioRun;
     private Animation<TextureRegion> fireMarioTransform;
 
+    private Array<Fireball> fireballs;
+    private PlayScreen screen;
+
+
+
     public Mario(World world, PlayScreen screen){
 
+        this.screen = screen;
         this.world = world;
 
         currentState = State.STANDING;
@@ -114,12 +122,22 @@ public class Mario extends Sprite {
 
         setBounds(0,0,16/MarioBros.ppm,16/MarioBros.ppm);
         setRegion(marioStand);
+
+        fireballs = new Array<Fireball>();
+
     }
 
     public void update(float dt){
+        /*if(screen.getHud().isTimeUp() && !isDead()){
+            die();
+        }*/
+
         if(marioIsBig){
             setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2 - 6/MarioBros.ppm);
 
+        }
+        else if(marioIsFire){
+            setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2 - 6/MarioBros.ppm);
         }
         else {
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
@@ -128,9 +146,19 @@ public class Mario extends Sprite {
         if (timeToDefineBigMario) {
             defineBigMario();
         }
-
+        if(timeToDefineFireMario){
+            defineFireMario();
+        }
         if(timeToRedefineMario){
             redefineMario();
+        }
+
+
+        for(Fireball ball:fireballs){
+            ball.update(dt);
+            if(ball.isDestroyed()){
+                fireballs.removeValue(ball,true);
+            }
         }
     }
 
@@ -166,6 +194,42 @@ public class Mario extends Sprite {
         b2body.createFixture(fDef).setUserData(this);
 
         timeToRedefineMario = false;
+
+    }
+
+    public void defineFireMario(){
+        Vector2 currentPosition = b2body.getPosition();
+        world.destroyBody(b2body);
+
+        BodyDef bdef = new BodyDef();
+        bdef.position.set(currentPosition.add(0,10/MarioBros.ppm));
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        b2body = world.createBody(bdef);
+
+        FixtureDef fDef = new FixtureDef();
+        CircleShape shape = new CircleShape();
+        //PolygonShape shape = new PolygonShape();
+        shape.setRadius(6/MarioBros.ppm);
+        //shape.setAsBox(16/2/MarioBros.ppm,16/2/MarioBros.ppm);
+
+        fDef.filter.categoryBits = MarioBros.MARIO_BIT;
+        fDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT
+                |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT;
+
+        fDef.shape = shape;
+        b2body.createFixture(fDef).setUserData(this);
+        shape.setPosition(new Vector2(0,-14/MarioBros.ppm));
+        b2body.createFixture(fDef).setUserData(this);
+
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-2/MarioBros.ppm,6/MarioBros.ppm),new Vector2(2/MarioBros.ppm,6/MarioBros.ppm));
+        fDef.filter.categoryBits = MarioBros.MARIO_HEAD_BIT;
+        fDef.shape = head;
+        fDef.isSensor = true;
+
+        b2body.createFixture(fDef).setUserData(this);
+
+        timeToDefineFireMario = false;
 
     }
 
@@ -215,8 +279,9 @@ public class Mario extends Sprite {
                 break;
             case TRANSFORM:
                 region = fireMarioTransform.getKeyFrame(stateTimer);
-                if(fireMarioTransform.isAnimationFinished(stateTimer));
-                runFireTransformAnimation = false;
+                if(fireMarioTransform.isAnimationFinished(stateTimer)) {
+                    runFireTransformAnimation = false;
+                }
                 break;
             case GROWING:
                 region = growMario.getKeyFrame(stateTimer);
@@ -331,19 +396,36 @@ public class Mario extends Sprite {
     }
 
     public void fireTransform(){
-        if(!isBig() || !isFire()) {
+        if(!isBig() && !isFire()) {
             runFireTransformAnimation = true;
             marioIsFire = true;
-            setBounds(getX(), getY(), getWidth(), getHeight());
+            timeToDefineFireMario = true;
+            setBounds(getX(), getY(), getWidth(), getHeight()*2);
+        }
+        else if(isBig() && !isFire()){
+            runFireTransformAnimation = false;
+            marioIsFire = false;
+        }
+        else if(!isBig() && isFire()){
+            runFireTransformAnimation = false;
+            marioIsFire = true;
         }
     }
 
     public void grow(){
-        if(!isBig() || !isFire()) {
+        if(!isBig() && !isFire()) {
             runGrowAnimation = true;
             marioIsBig = true;
             timeToDefineBigMario = true;
             setBounds(getX(), getY(), getWidth(), getHeight() * 2);
+        }
+        else if(isBig() && !isFire()){
+            runGrowAnimation = false;
+            marioIsBig = true;
+        }
+        else if(!isBig() && isFire()){
+            runGrowAnimation = false;
+            marioIsBig = false;
         }
     }
 
@@ -357,7 +439,14 @@ public class Mario extends Sprite {
                 timeToRedefineMario = true;
                 setBounds(getX(), getY(), getWidth(), getHeight() / 2);
 
-            } else {
+            }
+            else if(marioIsFire){
+                marioIsFire = false;
+                timeToRedefineMario = true;
+                setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+
+            }
+            else {
                 marioIsDead = true;
                 Filter filter = new Filter();
                 filter.maskBits = MarioBros.NOTHING_BIT;
@@ -383,6 +472,25 @@ public class Mario extends Sprite {
 
     public boolean isFire(){
         return marioIsFire;
+    }
+
+    public void jump(){
+        if(currentState != State.JUMPING){
+            b2body.applyLinearImpulse(new Vector2(0,4f),b2body.getWorldCenter(),true);
+            currentState = State.JUMPING;
+        }
+    }
+
+    public void fire(){
+        fireballs.add(new Fireball(screen,b2body.getPosition().x,
+                b2body.getPosition().y - 10/MarioBros.ppm, runningRight ? true:false));
+    }
+
+    public void draw(Batch batch){
+        super.draw(batch);
+        for(Fireball ball:fireballs){
+            ball.draw(batch);
+        }
     }
 
 

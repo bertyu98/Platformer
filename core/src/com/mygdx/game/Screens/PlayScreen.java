@@ -1,5 +1,6 @@
 package com.mygdx.game.Screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Controller;
 import com.mygdx.game.Sprites.BuzzyBeetle;
 import com.mygdx.game.Sprites.CoinObject;
 import com.mygdx.game.Sprites.Enemies;
@@ -37,7 +39,9 @@ import com.mygdx.game.Sprites.Brick;
 import com.mygdx.game.Sprites.Coin;
 import com.mygdx.game.Sprites.Goomba;
 import com.mygdx.game.Sprites.Mario;
+import com.mygdx.game.Weapon.Fireball;
 
+import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
@@ -49,6 +53,7 @@ public class PlayScreen implements Screen {
     private MarioBros game;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
+    Controller controller;
 
     private UI ui;
 
@@ -66,6 +71,8 @@ public class PlayScreen implements Screen {
     private Array<Items>items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
+    private Array<Fireball>fireballs;
+
     private TextureAtlas atlas;
 
     public TextureAtlas getAtlas(){
@@ -73,7 +80,7 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){
-        if(player.currentState != Mario.State.DEAD) {
+        /*if(player.currentState != Mario.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
             }
@@ -85,8 +92,26 @@ public class PlayScreen implements Screen {
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) {
                 player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
             }
+            if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) /*&& player.isFire() && player.fireTimer > player.fireInterval*/ /*){
+                player.fire();
+
+            }*/
+            if (controller.isUpPressed() | controller.aPressed()) {
+                if ( player.b2body.getLinearVelocity().y == 0)
+                    player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+            }
+            if ( controller.isRightPressed() && player.b2body.getLinearVelocity().x <= 2)
+                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+
+            if ( controller.isLeftPressed() && player.b2body.getLinearVelocity().x >= -2)
+                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+
+            if (controller.bPressed() && player.isFire()) {
+                player.fire();
+            }
         }
-    }
+
+
 
     public void update(float dt){
         handleInput(dt);
@@ -105,6 +130,8 @@ public class PlayScreen implements Screen {
         for(Items item:items){
             item.update(dt);
         }
+
+
         ui.update(dt);
 
         if(player.currentState != Mario.State.DEAD) {
@@ -220,8 +247,11 @@ public class PlayScreen implements Screen {
             buzzyBeetles.add(new BuzzyBeetle(this,rect.getX()/MarioBros.ppm,rect.getY()/MarioBros.ppm));
         }
 
+        controller = new Controller(game.batch);
+
         items = new Array<Items>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+
 
     }
 
@@ -273,6 +303,12 @@ public class PlayScreen implements Screen {
 
         renderer.render();
 
+        if(Gdx.app.getType() == Application.ApplicationType.Android)
+        {
+            controller.draw();
+        }
+
+
         game.batch.setProjectionMatrix(ui.stage.getCamera().combined);
         ui.stage.draw();
 
@@ -288,11 +324,14 @@ public class PlayScreen implements Screen {
         for(Items item:items){
             item.draw(game.batch);
         }
+
+
         game.batch.end();
 
         if(gameOver()){
             game.setScreen(new GameOverScreen(game));
             dispose();
+
         }
 
 

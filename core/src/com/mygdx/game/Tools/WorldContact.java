@@ -11,6 +11,7 @@ import com.mygdx.game.Sprites.Enemies;
 import com.mygdx.game.Sprites.Items;
 import com.mygdx.game.Sprites.Mario;
 import com.mygdx.game.Sprites.TileObjects;
+import com.mygdx.game.Weapon.Fireball;
 
 public class WorldContact implements ContactListener {
 
@@ -83,6 +84,14 @@ public class WorldContact implements ContactListener {
             }
             else {
                 ((Items)fixB.getUserData()).use((Mario)fixA.getUserData());
+            }
+        }
+        else if(cDef == (MarioBros.FIREBALL_BIT | MarioBros.OBJECT_BIT)){
+            if(fixA.getFilterData().categoryBits == MarioBros.FIREBALL_BIT) {
+                ((Fireball)fixA.getUserData()).setToDestroy();
+            }
+            else {
+                ((Fireball)fixB.getUserData()).setToDestroy();
             }
         }
 
