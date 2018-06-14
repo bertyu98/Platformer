@@ -96,6 +96,14 @@ public class WorldContact implements ContactListener {
                 ((Items)fixB.getUserData()).use((Mario)fixA.getUserData());
             }
         }
+        else if(cDef == (MarioBros.FIREBALL_BIT | MarioBros.ENEMY_BIT)){
+            if(fixB.getFilterData().categoryBits == MarioBros.FIREBALL_BIT) {
+                ((Enemies)fixA.getUserData()).hitByFire((Fireball) fixB.getUserData());
+                Gdx.app.log("Enemy","hit");}
+            else {
+                ((Enemies)fixB.getUserData()).hitByFire((Fireball)fixA.getUserData());
+                Gdx.app.log("Enemy","hit"); }
+        }
         else if(cDef == (MarioBros.FIREBALL_BIT | MarioBros.OBJECT_BIT)){
             if(fixA.getFilterData().categoryBits == MarioBros.FIREBALL_BIT) {
                 ((Fireball)fixA.getUserData()).setToDestroy();
@@ -109,7 +117,11 @@ public class WorldContact implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-
+        final Fixture fixtureA = contact.getFixtureA();
+        final Fixture fixtureB = contact.getFixtureB();
+        if(fixtureA == null || fixtureB == null) {
+            throw new RuntimeException("No fixture found.");
+        }
     }
 
     @Override

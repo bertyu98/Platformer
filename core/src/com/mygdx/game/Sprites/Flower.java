@@ -9,6 +9,8 @@ import com.mygdx.game.Scenes.UI;
 import com.mygdx.game.Screens.PlayScreen;
 
 public class Flower extends Items {
+
+
     public Flower(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         setRegion(screen.getAtlas().findRegion("Flower"),0,0,16,16);
@@ -38,15 +40,19 @@ public class Flower extends Items {
     @Override
     public void update(float dt){
         super.update(dt);
-        setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y - getHeight()/2);
-        velocity.y = body.getLinearVelocity().y;
-        body.setLinearVelocity(velocity);
+        if(body != null) {
+            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+            velocity.y = body.getLinearVelocity().y;
+            body.setLinearVelocity(velocity);
+        }
 
     }
 
     @Override
     public void use(Mario mario) {
         destroy();
+
+        canFire=true;
         mario.fireTransform();
         UI.addScore(1000);
 

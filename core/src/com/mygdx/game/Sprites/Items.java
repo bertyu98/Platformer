@@ -16,7 +16,10 @@ public abstract class Items extends Sprite {
     protected boolean destroy;
     protected Body body;
 
+    public static boolean canFire;
+
     public Items(PlayScreen screen,float x,float y){
+
         this.screen = screen;
         this.world = screen.getWorld();
         setPosition(x,y);
@@ -40,6 +43,7 @@ public abstract class Items extends Sprite {
     public void update(float dt){
         if(toDestroy && !destroy){
             world.destroyBody(body);
+            body = null;
             destroy = true;
         }
     }

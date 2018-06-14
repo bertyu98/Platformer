@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Weapon.Fireball;
 
 public class BuzzyBeetle extends Enemies {
     public enum State {WALKING,STANDING_SHELL,MOVING_SHELL,DEAD}
@@ -46,6 +47,7 @@ public class BuzzyBeetle extends Enemies {
         bdef.position.set(getX(),getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
+
 
         FixtureDef fDef = new FixtureDef();
         CircleShape shape = new CircleShape();
@@ -86,6 +88,11 @@ public class BuzzyBeetle extends Enemies {
         }
     }
 
+    @Override
+    public void hitByFire(Fireball fireball) {
+
+    }
+
     public void kick(int speed){
         velocity.x = speed;
         currentState = BuzzyBeetle.State.MOVING_SHELL;
@@ -104,6 +111,7 @@ public class BuzzyBeetle extends Enemies {
             rotate(deadRotationDegrees);
             if(stateTime > 5 && !destroy){
                 world.destroyBody(b2body);
+                b2body = null;
                 destroy = true;
             }
         }

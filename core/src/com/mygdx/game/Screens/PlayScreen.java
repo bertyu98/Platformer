@@ -73,8 +73,6 @@ public class PlayScreen implements Screen {
     private Array<Items>items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
-    private Array<Fireball>fireballs;
-
     private TextureAtlas atlas;
 
     public boolean levelCompleted;
@@ -129,7 +127,7 @@ public class PlayScreen implements Screen {
         player.update(dt);
         for(Enemies enemy:getEnemies()){
             enemy.update(dt);
-            if(enemy.getX() > player.getX() - 224/MarioBros.ppm){
+            if(enemy.getX() > player.getX() - 224/MarioBros.ppm && enemy.b2body != null){
                 enemy.b2body.setActive(true);
             }
         }

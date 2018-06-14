@@ -13,6 +13,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Enemies;
+import com.mygdx.game.Sprites.Goomba;
+import com.mygdx.game.Sprites.Mario;
+import com.mygdx.game.Sprites.Turtle;
+
+import java.util.Iterator;
 
 public class Fireball extends Sprite {
 
@@ -63,20 +69,33 @@ public class Fireball extends Sprite {
         fdef.restitution = 1;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
-        b2body.setLinearVelocity(new Vector2(fireRight ? 2 : -2, 2.5f));
+        b2body.setLinearVelocity(new Vector2(fireRight ? 4 : -4, 2.5f));
     }
 
     public void update(float dt){
         stateTime += dt;
         setRegion(fireAnimation.getKeyFrame(stateTime, true));
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-        if((stateTime > 3 || setToDestroy) && !destroyed) {
+        if((stateTime > 3|| setToDestroy) && !destroyed) {
             world.destroyBody(b2body);
+            b2body = null;
+
+
+            /*for (Iterator<Body> iter = world.getBodies(); iter.hasNext();) {
+                Body body = iter.next();
+                if(body!=null) {
+                    Fireball data = (Fireball) body.getUserData();
+                    if(setToDestroy) {
+                        world.destroyBody(body);
+                        body.setUserData(null);
+                        body = null;
+                    }
+                }*/
             destroyed = true;
         }
-        if(b2body.getLinearVelocity().y > 2f)
+        else if(b2body.getLinearVelocity().y > 2f && b2body != null)
             b2body.setLinearVelocity(b2body.getLinearVelocity().x, 2f);
-        if((fireRight && b2body.getLinearVelocity().x < 0) || (!fireRight && b2body.getLinearVelocity().x > 0))
+        else if((fireRight && b2body.getLinearVelocity().x < 0) || (!fireRight && b2body.getLinearVelocity().x > 0) && b2body != null)
             setToDestroy();
     }
 
@@ -86,5 +105,18 @@ public class Fireball extends Sprite {
 
     public boolean isDestroyed(){
         return destroyed;
+    }
+
+    public void kill(Enemies enemy){
+        if(enemy instanceof Turtle){
+
+        }
+        else if(enemy instanceof Goomba){
+
+        }
+        else{
+            setToDestroy();
+        }
+
     }
 }

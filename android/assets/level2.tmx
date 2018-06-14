@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextobjectid="26">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextobjectid="30">
  <tileset firstgid="1" source="tileset_gutter.tsx"/>
  <layer name="background" width="240" height="13">
   <data encoding="base64" compression="zlib">
-   eJztwzEJAAAMA7DCdNW/rarYl0B6SVVVVVVVVVVVVVVVVR8P/sIMLg==
+   eJztwzEJAAAMA7Ay/4bqrir2JZBeUlVVVVVVVVVVVVVV1ccDxULniQ==
   </data>
  </layer>
  <layer name="graphics" width="240" height="13">
   <data encoding="base64" compression="zlib">
-   eJzt17EJgDAUBNCk1A1cQcdwBfefRQsFCyGogSTkPbgm1W+OIyEAAAAAAADwxxBDGGPpK4Av5qO7i/5Ck1L9zbnP25nplusNeC/VX/sM9crRX39oKCNHf2va6FWazZOe7+gxO8RQQRw=
+   eJzt1zEKg0AQQFEt4w1sU8Yb2HoF73+WWCikCAjj4jrsezCN1RTzWew6gHuNfe0NgKhZv5CWfiEv/UJe+oW89EvEa7ubwe1Up18iPtvdTG6nOv0ScdZvyfd53Wf8meNb6/RLxFm/3ud76JeIEv36h77uXXsBUirR75Pe6MWknX9a3qPF+QIis0Nr
   </data>
  </layer>
  <objectgroup name="pipes">
@@ -20,11 +20,20 @@
   <object id="23" x="2399.75" y="192.125" width="1440.38" height="15.75"/>
   <object id="24" x="1856.13" y="192.125" width="463.875" height="15.5"/>
   <object id="25" x="0.125" y="191.875" width="1775.88" height="16"/>
+  <object id="27" x="736" y="175.667" width="15.6667" height="16"/>
  </objectgroup>
  <objectgroup name="coins">
   <object id="17" x="3471.88" y="127.875" width="16" height="16"/>
-  <object id="18" x="3487.88" y="127.625" width="16.125" height="16.375"/>
-  <object id="19" x="3504.13" y="127.875" width="15.5" height="16.125"/>
+  <object id="18" x="3487.88" y="127.625" width="16.125" height="16.375">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="19" x="3504.13" y="127.875" width="15.5" height="16.125">
+   <properties>
+    <property name="flower" value=""/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="bricks">
   <object id="13" x="3439.88" y="128" width="16.125" height="15.75"/>
@@ -49,5 +58,9 @@
  <objectgroup name="buzzy">
   <object id="9" x="3056" y="176.25" width="16" height="15.5"/>
   <object id="10" x="3087.75" y="176" width="16.5" height="15.75"/>
+ </objectgroup>
+ <objectgroup name="flag">
+  <object id="26" x="738.667" y="23.6667" width="9.66667" height="152"/>
+  <object id="29" x="3762.67" y="163.333" width="9" height="27.3333"/>
  </objectgroup>
 </map>

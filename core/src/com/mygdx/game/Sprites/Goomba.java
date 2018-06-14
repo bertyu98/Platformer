@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Weapon.Fireball;
 
 public class Goomba extends Enemies {
 
@@ -39,6 +40,7 @@ public class Goomba extends Enemies {
         stateTime += dt;
         if(setToDestroy && !destroy){
             world.destroyBody(b2body);
+            b2body = null;
             destroy = true;
             setRegion(new TextureRegion(screen.getAtlas().findRegion("Goomba"),32,0,16,16));
             stateTime = 0;
@@ -66,7 +68,7 @@ public class Goomba extends Enemies {
 
         fDef.filter.categoryBits = MarioBros.ENEMY_BIT;
         fDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT
-        |MarioBros.ENEMY_BIT|MarioBros.OBJECT_BIT|MarioBros.MARIO_BIT;
+        |MarioBros.ENEMY_BIT|MarioBros.OBJECT_BIT|MarioBros.MARIO_BIT|MarioBros.FIREBALL_BIT;
 
         fDef.shape = shape;
         b2body.createFixture(fDef).setUserData(this);
@@ -88,6 +90,11 @@ public class Goomba extends Enemies {
 
     @Override
     public void hitonHead(Mario mario) {
+        setToDestroy = true;
+    }
+
+    @Override
+    public void hitByFire(Fireball fireball) {
         setToDestroy = true;
     }
 

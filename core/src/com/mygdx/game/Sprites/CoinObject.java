@@ -45,9 +45,11 @@ public class CoinObject extends Items {
     @Override
     public void update(float dt){
         super.update(dt);
-        setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y - getHeight()/2);
-        velocity.y = body.getLinearVelocity().y;
-        body.setLinearVelocity(velocity);
+        if (body != null) {
+            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+            velocity.y = body.getLinearVelocity().y;
+            body.setLinearVelocity(velocity);
+        }
 
     }
 

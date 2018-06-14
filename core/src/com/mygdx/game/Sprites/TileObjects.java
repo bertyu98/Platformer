@@ -27,6 +27,8 @@ public abstract class TileObjects {
     protected Fixture fixture;
     protected MapObject object;
 
+    public static Integer level = 1;
+
 
 
     public TileObjects(World world, TiledMap map, Rectangle bounds, PlayScreen screen, MapObject object){

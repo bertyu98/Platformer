@@ -13,9 +13,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Weapon.Fireball;
 
 public class Turtle extends Enemies{
-    public enum State {WALKING,STANDING_SHELL,MOVING_SHELL,DEAD}
+    public enum State {WALKING,JUMPING,STANDING_SHELL,MOVING_SHELL,DEAD}
     public static final int KICK_LEFT_SPEED = -2;
     public static final int KICK_RIGHT_SPEED = 2;
     public State currentState;
@@ -56,7 +57,7 @@ public class Turtle extends Enemies{
 
         fDef.filter.categoryBits = MarioBros.ENEMY_BIT;
         fDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT
-                |MarioBros.ENEMY_BIT|MarioBros.OBJECT_BIT|MarioBros.MARIO_BIT;
+                |MarioBros.ENEMY_BIT|MarioBros.OBJECT_BIT|MarioBros.MARIO_BIT|MarioBros.FIREBALL_BIT;
 
         fDef.shape = shape;
         b2body.createFixture(fDef).setUserData(this);
@@ -87,6 +88,17 @@ public class Turtle extends Enemies{
         }
     }
 
+    @Override
+    public void hitByFire(Fireball fireball) {
+        if(currentState != State.STANDING_SHELL){
+            currentState = State.STANDING_SHELL;
+            velocity.x = 0;
+        }
+        else{
+            kick(fireball.getX() <= this.getX() ? KICK_RIGHT_SPEED : KICK_LEFT_SPEED);
+        }
+    }
+
     public void kick(int speed){
         velocity.x = speed;
         currentState = State.MOVING_SHELL;
@@ -110,21 +122,29 @@ public class Turtle extends Enemies{
             rotate(deadRotationDegrees);
             if(stateTime > 5 && !destroy){
                 world.destroyBody(b2body);
+                b2body = null;
                 destroy = true;
             }
         }
         else {
             b2body.setLinearVelocity(velocity);
+            //java.util.Timer timer = new java.util.Timer();
+            //timer.schedule(new QueuedAction(b2body),5000,1);
+
+
+
         }
     }
 
     public TextureRegion getFrames(float dt) {
         TextureRegion region;
         switch(currentState){
+
             case STANDING_SHELL:
             case MOVING_SHELL:
                 region = shell;
                 break;
+            case JUMPING:
             case WALKING:
 
             default:
@@ -188,4 +208,6 @@ public class Turtle extends Enemies{
             super.draw(batch);
         }
     }
+
+
 }

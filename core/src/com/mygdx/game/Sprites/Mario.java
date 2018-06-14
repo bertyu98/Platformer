@@ -55,7 +55,7 @@ public class Mario extends Sprite {
     private Animation<TextureRegion> fireMarioRun;
     private Animation<TextureRegion> fireMarioTransform;
 
-    private Array<Fireball> fireballs;
+    public static Array<Fireball> fireballs;
     private PlayScreen screen;
 
 
@@ -211,6 +211,7 @@ public class Mario extends Sprite {
     public void defineFireMario(){
         Vector2 currentPosition = b2body.getPosition();
         world.destroyBody(b2body);
+        b2body = null;
 
         BodyDef bdef = new BodyDef();
         bdef.position.set(currentPosition.add(0,10/MarioBros.ppm));
@@ -225,7 +226,8 @@ public class Mario extends Sprite {
 
         fDef.filter.categoryBits = MarioBros.MARIO_BIT;
         fDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT
-                |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT;
+                |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT
+        |MarioBros.FLAG_BIT;
 
         fDef.shape = shape;
         b2body.createFixture(fDef).setUserData(this);
@@ -261,7 +263,7 @@ public class Mario extends Sprite {
 
         fDef.filter.categoryBits = MarioBros.MARIO_BIT;
         fDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT
-                |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT;
+                |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT|MarioBros.FLAG_BIT;
 
         fDef.shape = shape;
         b2body.createFixture(fDef).setUserData(this);
@@ -498,7 +500,7 @@ public class Mario extends Sprite {
 
     public void fire(){
         fireballs.add(new Fireball(screen,b2body.getPosition().x,
-                b2body.getPosition().y - 10/MarioBros.ppm, runningRight ? true:false));
+                b2body.getPosition().y , runningRight ? true:false));
     }
 
     public void draw(Batch batch){

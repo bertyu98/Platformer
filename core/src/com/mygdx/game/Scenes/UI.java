@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Sprites.TileObjects;
 
 public class UI implements Disposable {
     public Stage stage;
@@ -48,9 +49,9 @@ public class UI implements Disposable {
         countdownLabel = new Label(String.format("%03d",worldTimer),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel =  new Label(String.format("%06d",score),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         lifeCount = new Label(String.format("%01d",lives),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        levelLabel = new Label(String.format("%01d", TileObjects.level),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         timeLabel = new Label("TIME",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        levelLabel = new Label("1-1",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         worldLabel = new Label("WORLD",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         marioLabel = new Label("MARIO",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         livesLabel = new Label("LIVES",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -106,5 +107,9 @@ public class UI implements Disposable {
 
     public static Integer getLives(){
         return lives;
+    }
+
+    public static void setLevel(int value){
+
     }
 }
