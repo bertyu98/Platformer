@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Scenes.UI;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Weapon.Fireball;
 
@@ -128,9 +129,19 @@ public class Mario extends Sprite {
     }
 
     public void update(float dt){
-        /*if(screen.getHud().isTimeUp() && !isDead()){
-            die();
-        }*/
+        if(screen.getUi().isTimeUp() && !isDead()){
+            marioIsDead = true;
+            Filter filter = new Filter();
+            filter.maskBits = MarioBros.NOTHING_BIT;
+            for (Fixture fixture : b2body.getFixtureList()) {
+                fixture.setFilterData(filter);
+            }
+            b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+
+        }
+        else{
+
+        }
 
         if(marioIsBig){
             setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2 - 6/MarioBros.ppm);
@@ -380,7 +391,8 @@ public class Mario extends Sprite {
 
         fDef.filter.categoryBits = MarioBros.MARIO_BIT;
         fDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT
-        |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT;
+        |MarioBros.OBJECT_BIT|MarioBros.ENEMY_BIT|MarioBros.ENEMY_HEAD_BIT|MarioBros.ITEM_BIT
+        |MarioBros.FLAG_BIT;
 
         fDef.shape = shape;
         b2body.createFixture(fDef).setUserData(this);
@@ -447,13 +459,16 @@ public class Mario extends Sprite {
 
             }
             else {
-                marioIsDead = true;
-                Filter filter = new Filter();
-                filter.maskBits = MarioBros.NOTHING_BIT;
-                for (Fixture fixture : b2body.getFixtureList()) {
-                    fixture.setFilterData(filter);
+                UI.loseLife();
+                if(UI.getLives() == 0) {
+                    marioIsDead = true;
+                    Filter filter = new Filter();
+                    filter.maskBits = MarioBros.NOTHING_BIT;
+                    for (Fixture fixture : b2body.getFixtureList()) {
+                        fixture.setFilterData(filter);
+                    }
+                    b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
                 }
-                b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
             }
         }
     }
@@ -493,5 +508,18 @@ public class Mario extends Sprite {
         }
     }
 
+    public void die(){
+        if(!isDead()){
+            marioIsDead = true;
+            Filter filter = new Filter();
+            filter.maskBits = MarioBros.NOTHING_BIT;
+
+            for (Fixture fixture : b2body.getFixtureList()) {
+                fixture.setFilterData(filter);
+            }
+
+            b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+        }
+    }
 
 }

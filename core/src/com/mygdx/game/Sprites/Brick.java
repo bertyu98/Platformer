@@ -19,6 +19,11 @@ public class Brick extends TileObjects {
     }
 
     @Override
+    public void onHit(Mario mario) {
+
+    }
+
+    @Override
     public void onHeadHit(Mario mario) {
         if(mario.isBig()) {
             Gdx.app.log("Brick", "Hit");

@@ -48,7 +48,7 @@ public abstract class TileObjects {
         fixture = body.createFixture(fDef);
 
     }
-
+    public abstract void onHit(Mario mario);
     public abstract void onHeadHit(Mario mario);
 
     public void setCategoryFilter(short filterBit){

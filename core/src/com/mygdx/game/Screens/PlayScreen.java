@@ -27,6 +27,7 @@ import com.mygdx.game.Controller;
 import com.mygdx.game.Sprites.BuzzyBeetle;
 import com.mygdx.game.Sprites.CoinObject;
 import com.mygdx.game.Sprites.Enemies;
+import com.mygdx.game.Sprites.Flag;
 import com.mygdx.game.Sprites.Flower;
 import com.mygdx.game.Sprites.ItemDef;
 import com.mygdx.game.Sprites.Items;
@@ -180,7 +181,11 @@ public class PlayScreen implements Screen {
         Body body;
 
         //goomba = new Goomba(this,3000/MarioBros.ppm,32/MarioBros.ppm);
-
+        //flag
+        for(MapObject object: map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            new Flag(world,map,rect,this,object);
+        }
 
         //ground
         for(MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
@@ -373,6 +378,10 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         ui.dispose();
+    }
+
+    public UI getUi(){
+        return ui;
     }
 
 }

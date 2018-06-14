@@ -41,6 +41,16 @@ public class WorldContact implements ContactListener {
             }
         }
 
+        else if(cDef == (MarioBros.MARIO_BIT | MarioBros.FLAG_BIT)){
+            if(fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT){
+                ((TileObjects) fixB.getUserData()).onHit((Mario)fixA.getUserData());
+            }
+            else{
+                ((TileObjects) fixA.getUserData()).onHit((Mario)fixB.getUserData());
+
+            }
+        }
+
         else if(cDef == (MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT)){
             if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT){
                 ((Enemies)fixA.getUserData()).hitonHead((Mario)fixB.getUserData());
