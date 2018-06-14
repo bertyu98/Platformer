@@ -32,6 +32,7 @@ import com.mygdx.game.Sprites.Flower;
 import com.mygdx.game.Sprites.ItemDef;
 import com.mygdx.game.Sprites.Items;
 import com.mygdx.game.Sprites.Mushroom;
+import com.mygdx.game.Sprites.TileObjects;
 import com.mygdx.game.Sprites.Turtle;
 import com.mygdx.game.Tools.WorldContact;
 import com.mygdx.game.MarioBros;
@@ -76,9 +77,14 @@ public class PlayScreen implements Screen {
 
     private TextureAtlas atlas;
 
+    public boolean levelCompleted;
+
+
     public TextureAtlas getAtlas(){
         return atlas;
     }
+
+
 
     public void handleInput(float dt){
         /*if(player.currentState != Mario.State.DEAD) {
@@ -165,8 +171,18 @@ public class PlayScreen implements Screen {
 
         ui = new UI(game.batch);
 
-        mapLoader = new TmxMapLoader();
-        map = mapLoader.load("level1Custom.tmx");
+        if(TileObjects.level == 1) {
+            mapLoader = new TmxMapLoader();
+            map = mapLoader.load("level1Custom.tmx");
+        }
+        else if(TileObjects.level == 2){
+            mapLoader = new TmxMapLoader();
+            map = mapLoader.load("level2.tmx");
+        }
+        else{
+            mapLoader = new TmxMapLoader();
+            map = mapLoader.load("level3.tmx");
+        }
         renderer = new OrthogonalTiledMapRenderer(map,1/MarioBros.ppm);
         gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
 
@@ -339,6 +355,15 @@ public class PlayScreen implements Screen {
 
         }
 
+        if(TileObjects.level == 2 && levelCompleted){
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
+        if(TileObjects.level == 3 && levelCompleted) {
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+
+        }
 
     }
 
