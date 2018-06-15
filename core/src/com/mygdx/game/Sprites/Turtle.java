@@ -11,9 +11,12 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Weapon.Fireball;
+
+import java.util.TimerTask;
 
 public class Turtle extends Enemies{
     public enum State {WALKING,JUMPING,STANDING_SHELL,MOVING_SHELL,DEAD}
@@ -28,6 +31,8 @@ public class Turtle extends Enemies{
     private boolean destroy;
     private TextureRegion shell;
     private float deadRotationDegrees;
+    int timer = 0;
+    int waitingTime = 1;
 
     public Turtle(PlayScreen screen, float x, float y) {
         super(screen, x, y);
@@ -128,8 +133,19 @@ public class Turtle extends Enemies{
         }
         else {
             b2body.setLinearVelocity(velocity);
+            /*java.util.Timer timer = new java.util.Timer();
+            TimerTask myTask = new TimerTask() {
+                @Override
+                public void run() {
+                    b2body.applyLinearImpulse(new Vector2(0,4f),b2body.getWorldCenter(),true);
+                    b2body.setLinearVelocity(new Vector2(1,1));
+
+                }
+            };
+            timer.schedule(myTask,5000,5000);
+            b2body.applyLinearImpulse(new Vector2(0,-8f),b2body.getWorldCenter(),true);
             //java.util.Timer timer = new java.util.Timer();
-            //timer.schedule(new QueuedAction(b2body),5000,1);
+            //timer.schedule(new QueuedAction(b2body),5000,1);*/
 
 
 

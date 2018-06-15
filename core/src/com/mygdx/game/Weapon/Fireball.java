@@ -69,7 +69,7 @@ public class Fireball extends Sprite {
         fdef.restitution = 1;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
-        b2body.setLinearVelocity(new Vector2(fireRight ? 4 : -4, 2.5f));
+        b2body.setLinearVelocity(new Vector2(fireRight ? 2: -2, 2f));
     }
 
     public void update(float dt){

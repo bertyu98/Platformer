@@ -105,7 +105,9 @@ public class BuzzyBeetle extends Enemies {
             currentState = BuzzyBeetle.State.WALKING;
             velocity.x = -1;
         }
-        setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - 8/MarioBros.ppm);
+        if(b2body != null) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - 8 / MarioBros.ppm);
+        }
         if(currentState == BuzzyBeetle.State.DEAD){
             deadRotationDegrees +=3;
             rotate(deadRotationDegrees);
