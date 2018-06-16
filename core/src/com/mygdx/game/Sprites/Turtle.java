@@ -121,6 +121,7 @@ public class Turtle extends Enemies{
             currentState = State.WALKING;
             velocity.x = 1;
         }
+        if(b2body != null)
         setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - 8/MarioBros.ppm);
         if(currentState == State.DEAD){
             deadRotationDegrees +=3;
