@@ -61,6 +61,5 @@
  </objectgroup>
  <objectgroup name="flag">
   <object id="26" x="738.667" y="23.6667" width="9.66667" height="152"/>
-  <object id="29" x="3762.67" y="163.333" width="9" height="27.3333"/>
  </objectgroup>
 </map>
